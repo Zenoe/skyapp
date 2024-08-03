@@ -1,15 +1,23 @@
-import { useState } from "react";
-// import reactLogo from "./assets/react.svg";
-// import viteLogo from "/vite.svg";
-function App() {
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { lazy } from "react";
+
+import Loadable from "@/components/Loadable";
+
+import AdminRoute from "./routes/AdminRoute";
+
+const Home = Loadable(lazy(() => import("@/pages/Home")));
+import ScrollTop from "@/components/ScrollTop";
+
+export default function App() {
   return (
-    <div className="flex items-center justify-center min-h-screen bg-white">
-      <div>
-        <h1 className="text-3xl font-bold underline">Hello world!</h1>
-        {/* <div className="">xxx</div> */}
-      </div>
-    </div>
+    <Router>
+      <ScrollTop>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/admin/*" element={<AdminRoute />} />
+        </Routes>
+      </ScrollTop>
+    </Router>
   );
 }
-
-export default App;

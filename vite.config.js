@@ -1,11 +1,11 @@
 import { defineConfig } from "vite";
+import path from "path";
 import react from "@vitejs/plugin-react-swc";
 import viteCompression from "vite-plugin-compression";
 
 export default defineConfig({
   plugins: [
     react(),
-    //配置打包方式
     viteCompression({
       verbose: true,
       disable: false,
@@ -14,6 +14,11 @@ export default defineConfig({
       ext: ".gz",
     }),
   ],
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "src"),
+    },
+  },
   server: {
     host: "0.0.0.0",
   },
