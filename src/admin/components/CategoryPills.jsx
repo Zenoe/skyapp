@@ -14,7 +14,6 @@ export function CategoryPills({ categories, selectedCategory, onSelect }) {
 
     let container = containerRef.current;
     setIsLeftVisible(translate > 0);
-    console.log(translate, container.clientWidth, container.scrollWidth);
     setIsRightVisible(
       translate + container.clientWidth < container.scrollWidth,
     );
