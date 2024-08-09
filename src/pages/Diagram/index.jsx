@@ -5,18 +5,19 @@ import MainArea from './MainArea'
 
 const Diagram = () => {
   const [dropPosition, setDropPosition] = useState(null)
-
-  const handleDragStart = event => {
-    // event.dataTransfer.setData('text/plain', '')
-    // setDragging(true)
+  const handleDragStart = (event, shapeType) => {
+    event.dataTransfer.setData('shapeType', shapeType)
   }
+
   const handleDrop = event => {
     event.preventDefault()
-    const rect = event.target.getBoundingClientRect()
-    const x = event.clientX - rect.left
-    const y = event.clientY - rect.top
-    console.log(event.clientX, event.clientY, rect.left, rect.top, x, y)
-    setDropPosition({ x, y })
+    const shapeType = event.dataTransfer.getData('shapeType')
+    const svgRect = event.target.getBoundingClientRect()
+    setDropPosition({
+      type: shapeType,
+      x: event.clientX - svgRect.left,
+      y: event.clientY - svgRect.top,
+    })
   }
 
   const handleDragOver = event => {
