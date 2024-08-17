@@ -14,11 +14,16 @@ import { twMerge } from "tailwind-merge";
 import { Button } from "@/components/Button";
 import { Children, useState } from "react";
 import { playlists, subscriptions } from "../data/sidebar";
-
+import { useSidebarContext } from "@/context/SidebarContext";
+import { PageheaderFirstSection } from "./PageHeader";
 export function SideBar() {
+  const { isSmallOpen, isLargeOpen, close } = useSidebarContext();
+  console.log("isisSmallOpen:", isSmallOpen, "isisLargeOpen:", isLargeOpen);
   return (
     <>
-      <aside className="sticky top-0 overflow-y-auto scrollbar-hidden flex flex-col ml-1 lg:hidden">
+      <aside
+        className={`sticky top-0 overflow-y-auto scrollbar-hidden flex flex-col ml-1 ${isLargeOpen ? "lg:hidden" : "lg:flex"} `}
+      >
         <SmallSidebarItem Icon={Home} title="Home" url="/" />
         <SmallSidebarItem Icon={Repeat} title="Shorts" url="/shorts" />
         <SmallSidebarItem
@@ -28,8 +33,22 @@ export function SideBar() {
         />
         <SmallSidebarItem Icon={Library} title="Library" url="/library" />
       </aside>
-      <aside className="w-56 lg:sticky absolute scrollbar-hidden top-0 overflow-y-auto pb-4 flex-col gpa-2 px-2 hidden lg:flex">
-        <LargeSidebarSection visibleItemCount={3} title="Hi">
+      {isSmallOpen && (
+        <div
+          onClick={close}
+          className="lg:hidden fixed inset-0 z-[999] bg-secondary-dark opacity-50"
+        />
+      )}
+
+      <aside
+        className={`w-56 lg:sticky absolute scrollbar-hidden top-0 overflow-y-auto pb-4 flex-col gpa-2 px-2 ${isLargeOpen ? "lg:flex" : "lg:hidden"} ${isSmallOpen ? "flex z-[999] bg-white max-h-screen" : "hidden"}`}
+      >
+        {isSmallOpen ? (
+          <div className="lg:hiden pt-2 pb-4 px-2 sticky top-0 bg-white">
+            <PageheaderFirstSection />
+          </div>
+        ) : null}
+        <LargeSidebarSection visibleItemCount={3}>
           <LargeSidebarItem isActive Icon={Home} title="Home" url="/" />
           <LargeSidebarItem Icon={Repeat} title="Shorts" url="/shorts" />
           <LargeSidebarItem
@@ -104,7 +123,7 @@ function LargeSidebarSection({ children, title, visibleItemCount }) {
       {showExpandedButton && (
         <Button
           variant="ghost"
-          className="flex w-full"
+          className="w-full flex items-center rounded-lg gap-4 p-3"
           onClick={() => {
             /* setIsExpanded(!isExpanded); */
             /*learn*/
@@ -125,16 +144,16 @@ function LargeSidebarItem({ Icon, url, title, isActive }) {
       href={url}
       className={twMerge(
         buttonStyles({ variant: "ghost" }),
-        `p-3 px-1 flex w-full rounded-lg gap-1 items-center ${isActive ? "font-bold bg-neutral-100 hover:bg-secondary" : undefined}`,
+        `p-3 gap-4 flex w-full rounded-lg gap-1 items-center ${isActive ? "font-bold bg-neutral-100 hover:bg-secondary" : undefined}`,
       )}
     >
       {typeof Icon === "string" ? (
-        <img src={Icon} className="w-6 h-6" />
+        <img src={Icon} className="w-6 h-6 rounded-full" />
       ) : (
         <Icon className="w-6 h-6" />
       )}
 
-      <div className="text-sm">{title}</div>
+      <div className="text-sm overflow-hidden text-ellipsis">{title}</div>
     </a>
   );
 }
